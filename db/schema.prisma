@@ -1,0 +1,56 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = "mysql://zsdzecxmrcts:pscale_pw_ZNpXOF77rfjlMSr-OAtFxuhb678ureaK4ZH7jRZXe3g@bwuspbcg4c6x.eu-central-1.psdb.cloud/groupomania?sslaccept=strict"
+  referentialIntegrity = "prisma"
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  name String 
+  last_name String
+  email String @unique
+  password String
+  confirm_password String
+  post Post []
+  comment Comment[]
+  like Like []
+  isAdmin Boolean @default(false) 
+}
+
+model Post {
+  id Int @id @default(autoincrement())
+  title String
+  content String
+  attachment String?
+  comments Comment[]
+  likes Like[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+}
+
+model Comment {
+  id Int @id @default(autoincrement())
+  content String
+  createdAt DateTime @default(now())
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade) // A comment can have one post
+  postId Int
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+}
+
+model Like {
+  id Int @id @default(autoincrement())
+  Like Boolean 
+  createdAt DateTime @default(now())
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId Int
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId Int
+}
