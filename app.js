@@ -3,7 +3,7 @@ const express = require('express');
 // Variable app afin d'utiliser express
 const app = express();
 
-const port = (process.env.PORT || '4200');
+const port = (process.env.PORT || '3000');
 
 // CORS partage des ressources entre origines multiple, permet d'ajouter des en-têtes HTTP afin de permettre à un agent utilisateur d'accéder à des ressources d'un serveur situé sur une autre origine que le site courant.
 app.use((req, res, next) => {

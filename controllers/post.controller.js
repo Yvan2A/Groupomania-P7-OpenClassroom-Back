@@ -115,29 +115,6 @@ exports.deletePost = async (req, res, next) => {
   }
 };
 
-// // Supprime un post
-// exports.deletePost = (req, res, next) => {
-//     if(req.body.isAdmin) {
-//         Post.delete({
-//             where: {
-//                 id: req.params.id,
-//             }
-//         })
-//         .then(() => res.status(200).json({message: 'Le post a été supprimé !'}))
-//         .catch(error => res.status(500).json(error))
-//     }
-//     else {
-//         Post.delete({
-//             where: {
-//                 id: req.params.id,
-//                 userId: req.body.userId
-//             }
-//         })
-//         .then(() => res.status(200).json({message: 'Le post a été supprimé !'}))
-//         .catch(error => res.status(500).json(error))
-//     }
-// }
-
 /* modification d'un post */
 exports.modifyPost = (req, res) => {
     req.file ? req.body.file = req.file.filename : console.log("on garde la même photo"); // <- on vérifie si l'user a uploadé une nouvelle photo
@@ -152,7 +129,8 @@ exports.modifyPost = (req, res) => {
                     console.log("l'image à remplacer est NULL")
                 }
             })
-            .catch(error => res.status(400).json(error));
+            .catch(error => res.status(400).json(error))
+            console.log (error);
     }
     try {
         Post.update(req.body, {where: {id: req.params.id}})
@@ -165,3 +143,67 @@ exports.modifyPost = (req, res) => {
         error => res.status(500).json(error);
     }
 };
+
+// exports.modifyPost = (req, res, next) => {
+//   const postObject = req.file
+//     ? {
+//         ...req.body,
+//         imageUrl: `${req.protocol}://${req.get('host')}/images/${
+//           req.file.filename
+//         }`,
+//       }
+//     : { ...req.body };
+
+//   Post.findUnique({ where: { id: req.params.id } })
+//     .then((post) => {
+//       if (req.file) {
+//         const oldFilename = post.imageUrl.split('/images/')[1];
+//         fs.unlink(`images/${oldFilename}`, (error) => {
+//           console.log(error);
+//         });
+//       }
+
+//       //validation existance post
+//       if (!post) {
+//         return res.status(404).json({ error: 'Post non trouvé !' });
+//       }
+
+//       //validation des champs
+//       if (!req.body.title || !req.body.description) {
+//         res.status(400).json({
+//           message: 'Merci de bien vérifier si les champs sont tous remplis !',
+//         });
+//         return;
+//       }
+
+//       User.findOne({ where: { id: req.auth.userId } })
+//         .then((user) => {
+//           //vérifier celui qui veut modifier le post est bien l'auteur du post ou l'administrateur
+//           if (user.isAdmin || req.auth.userId === post.userId) {
+//             // mettre à jour la base des donnée
+//             Post.update(
+//               { ...postObject, id: req.params.id },
+//               { where: { id: req.params.id } }
+//             )
+//               .then((post) =>
+//                 // si l'enregistrement réussi
+//                 Post.findOne({ where: { id: req.params.id } })
+//                   .then((post) => {
+//                     // récupérer "post" à jour
+//                     res
+//                       .status(200)
+//                       .json({ message: 'Post bien à jour !', post });
+//                   })
+//                   .catch((error) => res.status(400).json(error))
+//               )
+//               .catch((error) => res.status(400).json(error));
+//           } else {
+//             return res
+//               .status(401)
+//               .json({ error: 'Modification non autorisée !' });
+//           }
+//         })
+//         .catch((error) => res.status(400).json(error));
+//     })
+//     .catch((error) => res.status(400).json({ error }));
+// };

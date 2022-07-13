@@ -35,10 +35,12 @@ exports.unlikePost = (req, res) => {
 };
 
 /* logique pour récupérer les likes d'un post */
-exports.getAllLikesPost = (req, res) => {
+exports.getAllLikesPost = (req, res, next) => {
+        console.log(req.body)
     try {
         Like.findMany({where: {postId: req.params.postId}, include: User})
             .then(like => {
+                console.log(like);
                 res.status(200).json(like);
             })
             .catch(error => res.status(400).json(error))
@@ -46,3 +48,4 @@ exports.getAllLikesPost = (req, res) => {
         error => res.status(500).json(error);
     }
 };
+

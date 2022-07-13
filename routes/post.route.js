@@ -15,8 +15,8 @@ const multer = require('../middleware/multer-config.middleware');// récupérati
 router.get('/', auth, postCtrl.readPost);/* application de la logique métier readPost (controllers) à la route GET */
 router.get('/:id', auth, multer, postCtrl.readOnPost); /* application de la logique métier readOnPost (controllers) à la route GET */
 router.post('/', auth, multer, postCtrl.createPost);/* application de la logique métier createPost (controllers) à la route POST */
-router.put('/:id', multer, postCtrl.modifyPost);/* application de la logique métier modifyPost (controllers) à la route PUT */
-router.delete('/:id', postCtrl.deletePost);/* application de la logique métier deletePost (controllers) à la route DELETE */
+router.put('/:id',auth, multer, postCtrl.modifyPost);/* application de la logique métier modifyPost (controllers) à la route PUT */
+router.delete('/:id',auth, postCtrl.deletePost);/* application de la logique métier deletePost (controllers) à la route DELETE */
 
 /* route pour like un post */
 router.post('/:postId/like', likeCtrl.likePost);
